@@ -1,0 +1,17 @@
+apply plugin: 'java'
+apply plugin: 'groovy'
+apply plugin: 'idea'
+
+sourceCompatibility = 1.8
+version = '0.1'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    testCompile 'org.codehaus.groovy:groovy:2.3.0'
+    testCompile('org.spockframework:spock-core:0.7-groovy-2.0') {
+        exclude module: 'groovy-all'
+    }
+}
