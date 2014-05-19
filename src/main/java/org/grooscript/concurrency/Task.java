@@ -19,7 +19,7 @@ public class Task {
         return dataflowVariable;
     }
 
-    static Future whenAllBound(AllBoundedFunction whenAllBounded, Future... futures) throws Exception {
+    static void whenAllBound(AllBoundedFunction whenAllBounded, Future... futures) throws Exception {
         Future<Object[]> future = task(() -> {
             Object[] values = new Object[futures.length];
             int i;
@@ -29,6 +29,5 @@ public class Task {
             return values;
         });
         whenAllBounded.allDone(future.get());
-        //dataflowVariable.whenBound((values) -> whenAllBounded.allDone(values));
     }
 }
