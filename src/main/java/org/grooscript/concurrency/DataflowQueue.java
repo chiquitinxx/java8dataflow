@@ -7,7 +7,7 @@ public class DataflowQueue<T> extends DataflowPromise<T> {
 
     ImmutableQueue<T> queue = new ImmutableQueue<>();
 
-    public void set(T value) {
+    protected void setValue(T value) {
         queue.add(value);
     }
 

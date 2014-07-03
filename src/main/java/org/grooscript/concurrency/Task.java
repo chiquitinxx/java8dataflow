@@ -9,6 +9,7 @@ import java.util.function.Predicate;
  * Created by jorge on 15/05/14.
  */
 public class Task {
+
     static void task(Runnable runnable) throws InterruptedException {
         new Thread(runnable).start();
     }

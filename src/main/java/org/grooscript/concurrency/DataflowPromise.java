@@ -17,6 +17,16 @@ public abstract class DataflowPromise<T> implements Future<T> {
 
     abstract boolean notHasValue();
     abstract T getValue();
+    protected abstract void setValue(T value);
+
+    /**
+     * Sets the value
+     * @param value
+     */
+    public synchronized void set(T value) {
+        setValue(value);
+        notifyAll();
+    }
 
     /**
      * Waits if necessary for the computation to complete, and then
@@ -30,11 +40,22 @@ public abstract class DataflowPromise<T> implements Future<T> {
      *                               while waiting
      */
     public T get() throws InterruptedException, ExecutionException {
-        while (notHasValue() && !interrupt && !isCancelled()) {}
+        if (notHasValue() && !interrupt && !isCancelled()) {
+            waitBounded();
+        }
         if (interrupt) {
             throw new InterruptedException();
         }
         return getValue();
+    }
+
+    private synchronized void waitBounded()
+    {
+        try {
+            wait();
+        } catch (InterruptedException ie) {
+            interrupt = true;
+        }
     }
 
     /**
@@ -58,13 +79,14 @@ public abstract class DataflowPromise<T> implements Future<T> {
      * typically because it has already completed normally;
      * {@code true} otherwise
      */
-    public boolean cancel(boolean mayInterruptIfRunning) {
+    public synchronized boolean cancel(boolean mayInterruptIfRunning) {
         boolean canBeCancelled = !done;
         if (mayInterruptIfRunning) {
             interrupt = true;
         }
         cancelled = true;
         done = true;
+        notifyAll();
         return !canBeCancelled;
     }
 

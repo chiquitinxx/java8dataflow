@@ -132,7 +132,9 @@ class DataflowVariableSpec extends Specification {
 
         when:
         for (i = 0; i < numberOfTimes; i++) {
-            task { queue.set(total.getAndAdd(integerDataflow.get())) }
+            task {
+                queue.set(total.getAndAdd(integerDataflow.get()))
+            }
         }
         task {
             integerDataflow.set(new Integer(increment))
@@ -148,7 +150,6 @@ class DataflowVariableSpec extends Specification {
 
     void 'then after some variable is bounded'() {
         given:
-        def text = ''
         final def dv = new DataflowVariable<Integer>()
         dv.then {
             it * 2

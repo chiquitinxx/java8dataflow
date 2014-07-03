@@ -14,7 +14,7 @@ public class DataflowVariable<T> extends DataflowPromise<T> {
     private DataflowResult<T> bounded;
     private List<DataflowChangeResult<T>> thenFunctions = new ArrayList<DataflowChangeResult<T>>();
 
-    public void set(T value) {
+    protected void setValue(T value) {
         if (hasSettedValue == false) {
             executeBoundedIfExists(value);
             this.value = executeThenFunctions(value);
@@ -41,6 +41,9 @@ public class DataflowVariable<T> extends DataflowPromise<T> {
         return value;
     }
 
+    /**
+     * @param whenBound
+     */
     public void whenBound(DataflowResult<T> whenBound) {
         bounded = whenBound;
     }
