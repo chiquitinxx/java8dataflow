@@ -1,17 +1,23 @@
 package org.grooscript.concurrency;
 
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
+import java.util.concurrent.TimeUnit;
 import java.util.function.Predicate;
+import java.util.stream.IntStream;
+import java.util.stream.Stream;
 
 /**
  * Created by jorge on 15/05/14.
  */
 public class Task {
 
-    static void task(Runnable runnable) throws InterruptedException {
-        new Thread(runnable).start();
+    static TaskResult task(Runnable runnable) {
+        return new ThreadTaskResult(runnable);
     }
 
     static Future task(Callable callable) throws Exception {
@@ -20,15 +26,18 @@ public class Task {
         return dataflowVariable;
     }
 
-    static void whenAllBound(AllBoundedFunction whenAllBounded, Future... futures) throws Exception {
-        Future<Object[]> future = task(() -> {
-            Object[] values = new Object[futures.length];
-            int i;
-            for (i = 0; i < futures.length; i++) {
-                values[i] = futures[i].get();
+    static void whenAllBound(AllBoundedFunction whenAllBounded, Future... futures)
+            throws InterruptedException, ExecutionException {
+        Stream<Future> stream = Arrays.stream(futures);//.parallel();
+        System.out.println("Stream:"+stream);
+        whenAllBounded.allDone(stream.map(e -> {
+            try {
+                return e.get();
+            } catch (Exception ee) {
+
             }
-            return values;
-        });
-        whenAllBounded.allDone(future.get());
+            return null;
+            //return e.get();
+        }));
     }
 }
