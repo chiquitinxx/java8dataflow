@@ -66,16 +66,15 @@ public class TaskTest {
     }
 
     @Test
-    @Ignore
     public void testWhenAllBound() throws Exception {
         info = "";
         DataflowVariable hello = new DataflowVariable();
         Future world = task(() -> {
             hello.set("Hello");
-            return "world";
+            return "World";
         });
-        whenAllBound((values -> info = values.toArray()[0] + " - " + values.toArray()[1]), hello, world);
+        whenAllBound((values -> info = values[0] + " - " + values[1]), hello, world);
         Thread.sleep(50);
-        assertEquals("Hello - world", info);
+        assertEquals("Hello - World", info);
     }
 }

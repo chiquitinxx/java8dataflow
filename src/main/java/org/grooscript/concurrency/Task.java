@@ -28,8 +28,8 @@ public class Task {
 
     static void whenAllBound(AllBoundedFunction whenAllBounded, Future... futures)
             throws InterruptedException, ExecutionException {
-        Stream<Future> stream = Arrays.stream(futures);//.parallel();
-        System.out.println("Stream:"+stream);
+        Stream<Future> stream = Arrays.stream(futures).parallel();
+
         whenAllBounded.allDone(stream.map(e -> {
             try {
                 return e.get();
@@ -37,7 +37,6 @@ public class Task {
 
             }
             return null;
-            //return e.get();
-        }));
+        }).toArray());
     }
 }
