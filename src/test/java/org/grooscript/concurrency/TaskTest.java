@@ -43,7 +43,7 @@ public class TaskTest {
     public void testExecuteTaskOnError() throws InterruptedException {
         number = 0;
         task(() -> {
-            List list = null;
+            List<Integer> list = null;
             list.add(5);
         }).onError((t) -> {
             number = -1;
@@ -67,7 +67,7 @@ public class TaskTest {
     @Test
     public void testWhenAllBound() throws Exception {
         info = "";
-        DataflowVariable hello = new DataflowVariable();
+        DataflowVariable<String> hello = new DataflowVariable<>();
         Future world = task(() -> {
             hello.set("Hello");
             return "World";
@@ -113,13 +113,13 @@ public class TaskTest {
     public void testReturningFromTwoTasks() throws Exception {
         Future a = task(() -> 10);
         Future b = task(() -> 20);
-        ArrayList list = new ArrayList();
+        ArrayList<Integer> list = new ArrayList<>();
         whenAllBound((values -> {
-            list.add(values[0]);
-            list.add(values[1]);
+            list.add((Integer)values[0]);
+            list.add((Integer)values[1]);
         }), a, b);
         Thread.sleep(50);
-        assertEquals(list.stream().mapToInt(p -> (Integer)p).sum(), 30);
+        assertEquals(list.stream().mapToInt(p -> p).sum(), 30);
     }
 
 }

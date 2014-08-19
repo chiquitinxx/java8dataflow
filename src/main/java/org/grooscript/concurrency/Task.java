@@ -15,8 +15,8 @@ public class Task {
         return new ThreadTaskResult(runnable);
     }
 
-    static Future task(Callable callable) throws Exception {
-        DataflowVariable dataflowVariable = new DataflowVariable<>();
+    static <T> Future task(Callable<T> callable) throws Exception {
+        DataflowVariable<T> dataflowVariable = new DataflowVariable<>();
         dataflowVariable.set(callable.call());
         return dataflowVariable;
     }
