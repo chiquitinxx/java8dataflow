@@ -16,7 +16,7 @@ public abstract class DataflowPromise<T> implements Future<T> {
     volatile boolean interrupt = false;
 
     abstract boolean notHasValue();
-    abstract T getValue();
+    protected abstract T getValue();
     protected abstract void setValue(T value);
 
     /**

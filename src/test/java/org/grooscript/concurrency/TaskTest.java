@@ -5,8 +5,8 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
+import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.Callable;
 import java.util.concurrent.Future;
 
 import static org.junit.Assert.*;
@@ -18,14 +18,13 @@ import static org.grooscript.concurrency.Task.*;
 @RunWith(JUnit4.class)
 public class TaskTest {
 
-    int number;
+    volatile int number;
     String info;
 
     @Test
     public void testExecuteTask() throws InterruptedException {
         number = 0;
         task((Runnable)() -> number = 1);
-        assertEquals(0, number);
         Thread.sleep(50);
         assertEquals(1, number);
     }
@@ -43,13 +42,13 @@ public class TaskTest {
     @Test
     public void testExecuteTaskOnError() throws InterruptedException {
         number = 0;
-        task((Runnable)() -> {
+        task(() -> {
             List list = null;
             list.add(5);
         }).onError((t) -> {
             number = -1;
         });
-        Thread.sleep(100);
+        Thread.sleep(50);
         assertEquals(-1, number);
     }
 
@@ -77,4 +76,50 @@ public class TaskTest {
         Thread.sleep(50);
         assertEquals("Hello - World", info);
     }
+
+    @Test
+    public void testJoinRunnableTask() throws Exception {
+        number = 0;
+        TaskResult result = task(() -> {
+            try { Thread.sleep(10); } catch (InterruptedException ie) { ie.printStackTrace();}
+            number = 5;
+        });
+        result.join();
+        assertEquals(5, number);
+    }
+
+    @Ignore("Launching from Gradle deadlock shows, not executing from idea.")
+    public void testDeadLock() throws Exception {
+        DataflowVariable<Integer> a = new DataflowVariable<>();
+        DataflowVariable<Integer> b = new DataflowVariable<>();
+        task(() -> {
+            try {
+                System.out.println("b:" + b.get());
+            } catch (Exception e) { e.printStackTrace(); }
+            a.set(5);
+        });
+        task(() -> {
+            try {
+                System.out.println("a:" + a.get());
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            b.set(5);
+        });
+        assertEquals(a.get(), b.get());
+    }
+
+    @Test
+    public void testReturningFromTwoTasks() throws Exception {
+        Future a = task(() -> 10);
+        Future b = task(() -> 20);
+        ArrayList list = new ArrayList();
+        whenAllBound((values -> {
+            list.add(values[0]);
+            list.add(values[1]);
+        }), a, b);
+        Thread.sleep(50);
+        assertEquals(list.stream().mapToInt(p -> (Integer)p).sum(), 30);
+    }
+
 }

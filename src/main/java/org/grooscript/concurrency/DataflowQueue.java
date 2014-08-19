@@ -15,7 +15,7 @@ public class DataflowQueue<T> extends DataflowPromise<T> {
         return queue.isEmpty();
     }
 
-    T getValue() {
+    protected T getValue() {
         T result = queue.remove();
         return result;
     }

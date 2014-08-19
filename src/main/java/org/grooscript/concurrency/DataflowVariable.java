@@ -37,7 +37,7 @@ public class DataflowVariable<T> extends DataflowPromise<T> {
         return hasSettedValue == false;
     }
 
-    T getValue() {
+    protected T getValue() {
         return value;
     }
 

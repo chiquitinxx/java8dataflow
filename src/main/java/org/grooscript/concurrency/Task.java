@@ -1,14 +1,9 @@
 package org.grooscript.concurrency;
 
 import java.util.Arrays;
-import java.util.Collection;
-import java.util.Collections;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
-import java.util.concurrent.TimeUnit;
-import java.util.function.Predicate;
-import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
 /**
@@ -34,7 +29,7 @@ public class Task {
             try {
                 return e.get();
             } catch (Exception ee) {
-
+                ee.printStackTrace();
             }
             return null;
         }).toArray());

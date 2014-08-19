@@ -1,7 +1,5 @@
 package org.grooscript.concurrency;
 
-import java.util.concurrent.Callable;
-
 /**
  * Created by jorge on 09/07/14.
  */
@@ -40,6 +38,17 @@ public class ThreadTaskResult implements TaskResult {
     public void onError(ErrorResult errorResult) {
         if (mainException != null) {
             errorResult.onException(mainException);
+        }
+    }
+
+    @Override
+    public void join() {
+        if (mainThread != null && mainThread.isAlive()) {
+            try {
+                mainThread.join();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
         }
     }
 }
