@@ -150,7 +150,7 @@ class DataflowVariableSpec extends Specification {
 
     void 'then after some variable is bounded'() {
         given:
-        final def dv = new DataflowVariable<Integer>()
+        final DataflowVariable dv = new DataflowVariable<Integer>()
         dv.then {
             it * 2
         }.then {

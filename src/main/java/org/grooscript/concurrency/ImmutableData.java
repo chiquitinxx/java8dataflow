@@ -7,7 +7,7 @@ public final class ImmutableData<T> {
     private final T value;
     private final ImmutableData<T> next;
 
-    ImmutableData(T finalValue,ImmutableData<T> finalNext) {
+    ImmutableData(T finalValue, ImmutableData<T> finalNext) {
         value = finalValue;
         next = finalNext;
     }

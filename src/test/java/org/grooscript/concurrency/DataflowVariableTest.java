@@ -15,7 +15,7 @@ import static org.junit.Assert.assertEquals;
 @RunWith(JUnit4.class)
 public class DataflowVariableTest {
 
-    String text;
+    volatile String text;
 
     @Test
     public void testMultipleVariables() throws InterruptedException, ExecutionException {
@@ -33,19 +33,18 @@ public class DataflowVariableTest {
     }
 
     @Test
-    public void testWhenBound() throws InterruptedException {
+    public void testWhenBound() {
         DataflowVariable<String> dv = new DataflowVariable<String>();
         dv.whenBound((newValue) -> {
             System.out.println("New value is:"+newValue);
             text = "New value is:" + newValue;
         });
-        task(() -> dv.set("VALUE"));
-        Thread.sleep(50);
+        task(() -> dv.set("VALUE")).join();
         assertEquals("New value is:VALUE", text);
     }
 
     @Test
-    public void testThen() throws InterruptedException {
+    public void testThen() {
         DataflowVariable<String> dv = new DataflowVariable<String>();
         dv.then((value) -> value.toUpperCase()).
         then((value) -> value + value).
@@ -54,8 +53,7 @@ public class DataflowVariableTest {
             return value;
         });
 
-        task(() -> dv.set("value"));
-        Thread.sleep(50);
+        task(() -> dv.set("value")).join();
         assertEquals("New value is:VALUEVALUE", text);
     }
 }

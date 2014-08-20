@@ -22,25 +22,25 @@ public class TaskTest {
     String info;
 
     @Test
-    public void testExecuteTask() throws InterruptedException {
+    public void testExecuteTask()  {
         number = 0;
         task((Runnable)() -> number = 1);
-        Thread.sleep(50);
+        waitMilisecs(50);
         assertEquals(1, number);
     }
 
     @Test
-    public void testExecuteTaskWithThen() throws InterruptedException {
+    public void testExecuteTaskWithThen()  {
         number = 0;
         task((Runnable)() -> number = 3).then(() -> {
             number = number + 5;
         }).then(() -> number = number + 4);
-        Thread.sleep(100);
+        waitMilisecs(50);
         assertEquals(12, number);
     }
 
     @Test
-    public void testExecuteTaskOnError() throws InterruptedException {
+    public void testExecuteTaskOnError() {
         number = 0;
         task(() -> {
             List<Integer> list = null;
@@ -48,7 +48,7 @@ public class TaskTest {
         }).onError((t) -> {
             number = -1;
         });
-        Thread.sleep(50);
+        waitMilisecs(50);
         assertEquals(-1, number);
     }
 
@@ -56,7 +56,7 @@ public class TaskTest {
     @Test
     public void testExecuteTaskThatReturnsFuture() throws Exception {
         Future result = task(() -> {
-            Thread.sleep(10);
+            waitMilisecs(10);
             return 5;
         });
         assertEquals(5, result.get());
@@ -65,7 +65,7 @@ public class TaskTest {
     }
 
     @Test
-    public void testWhenAllBound() throws Exception {
+    public void testWhenAllBound() {
         info = "";
         DataflowVariable<String> hello = new DataflowVariable<>();
         Future world = task(() -> {
@@ -73,15 +73,15 @@ public class TaskTest {
             return "World";
         });
         whenAllBound((values -> info = values[0] + " - " + values[1]), hello, world);
-        Thread.sleep(50);
+        waitMilisecs(50);
         assertEquals("Hello - World", info);
     }
 
     @Test
-    public void testJoinRunnableTask() throws Exception {
+    public void testJoinRunnableTask() {
         number = 0;
         TaskResult result = task(() -> {
-            try { Thread.sleep(10); } catch (InterruptedException ie) { ie.printStackTrace();}
+            waitMilisecs(10);
             number = 5;
         });
         result.join();
@@ -110,7 +110,7 @@ public class TaskTest {
     }
 
     @Test
-    public void testReturningFromTwoTasks() throws Exception {
+    public void testReturningFromTwoTasks() {
         Future a = task(() -> 10);
         Future b = task(() -> 20);
         ArrayList<Integer> list = new ArrayList<>();
@@ -118,8 +118,16 @@ public class TaskTest {
             list.add((Integer)values[0]);
             list.add((Integer)values[1]);
         }), a, b);
-        Thread.sleep(50);
+        waitMilisecs(50);
         assertEquals(list.stream().mapToInt(p -> p).sum(), 30);
+    }
+
+    private void waitMilisecs(long milis) {
+        try {
+            Thread.sleep(milis);
+        } catch (InterruptedException ie) {
+            //nothing to do
+        }
     }
 
 }
