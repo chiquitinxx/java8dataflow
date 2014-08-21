@@ -5,16 +5,26 @@ package org.grooscript.concurrency;
  */
 public class ImmutableQueue<T> {
 
-    private ImmutableData<T> begin = null;
+    volatile ImmutableData<T> begin = null;
+    volatile ImmutableData<T> end = null;
 
-    public synchronized void add(T value) {
-        ImmutableData<T> newData = new ImmutableData<>(value, null);
-        begin = reconstructQueueAndGetFirst(begin, newData);
+    public void add(T value) {
+        ImmutableData<T> newData = new ImmutableData<>(value, begin);
+        begin = newData;
+        if (end == null) {
+            end = begin;
+        }
     }
 
     public synchronized T remove() {
         if (!isEmpty()) {
-            T last = removeFirst();
+            T last = end.getValue();
+            if (begin == end) {
+                begin = null;
+                end = null;
+            } else {
+                end = findNextIsEnd(begin, end);
+            }
             return last;
         } else {
             return null;
@@ -25,17 +35,11 @@ public class ImmutableQueue<T> {
         return begin == null;
     }
 
-    private ImmutableData<T> reconstructQueueAndGetFirst(ImmutableData<T> current, ImmutableData<T> last) {
-        if (current == null) {
-            return last;
-        } else {
-            return new ImmutableData<T>(current.getValue(), reconstructQueueAndGetFirst(current.getNext(), last));
+    private ImmutableData<T> findNextIsEnd(ImmutableData<T> begin, ImmutableData<T> end) {
+        ImmutableData<T> actual = begin;
+        while (actual.getNext() != end) {
+            actual = actual.getNext();
         }
-    }
-
-    private T removeFirst() {
-        T beginValue = begin.getValue();
-        begin = begin.getNext();
-        return beginValue;
+        return actual;
     }
 }

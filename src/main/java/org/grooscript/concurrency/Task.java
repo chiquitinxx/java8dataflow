@@ -1,6 +1,7 @@
 package org.grooscript.concurrency;
 
 import java.util.Arrays;
+import java.util.List;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
@@ -21,9 +22,15 @@ public class Task {
         return dataflowVariable;
     }
 
-    static void whenAllBound(AllBoundedFunction whenAllBounded, Future... futures) {
-        Stream<Future> stream = Arrays.stream(futures).parallel();
+    static void whenAllBound(AllBoundedFunction whenAllBounded, List<Future> futures) {
+        whenAllBoundExecution(whenAllBounded, futures.stream().parallel());
+    }
 
+    static void whenAllBound(AllBoundedFunction whenAllBounded, Future... futures) {
+        whenAllBoundExecution(whenAllBounded, Arrays.stream(futures).parallel());
+    }
+
+    private static void whenAllBoundExecution(AllBoundedFunction whenAllBounded, Stream<Future> stream) {
         whenAllBounded.allDone(stream.map(e -> {
             try {
                 return e.get();
