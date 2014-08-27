@@ -19,9 +19,9 @@ public class DataflowVariableTest {
 
     @Test
     public void testMultipleVariables() throws InterruptedException, ExecutionException {
-        DataflowVariable<Integer> initialDistance = new DataflowVariable<Integer>();
-        DataflowVariable<Integer> acceleration = new DataflowVariable<Integer>();
-        DataflowVariable<Integer> time = new DataflowVariable<Integer>();
+        DataflowVariable<Integer> initialDistance = new DataflowVariable<>();
+        DataflowVariable<Integer> acceleration = new DataflowVariable<>();
+        DataflowVariable<Integer> time = new DataflowVariable<>();
         task(() -> {
             initialDistance.set(100);
             acceleration.set(2);
@@ -34,7 +34,7 @@ public class DataflowVariableTest {
 
     @Test
     public void testWhenBound() {
-        DataflowVariable<String> dv = new DataflowVariable<String>();
+        DataflowVariable<String> dv = new DataflowVariable<>();
         dv.whenBound((newValue) -> {
             System.out.println("New value is:"+newValue);
             text = "New value is:" + newValue;
@@ -45,7 +45,7 @@ public class DataflowVariableTest {
 
     @Test
     public void testThen() {
-        DataflowVariable<String> dv = new DataflowVariable<String>();
+        DataflowVariable<String> dv = new DataflowVariable<>();
         dv.then((value) -> value.toUpperCase()).
         then((value) -> value + value).
         then((value) -> {
@@ -55,5 +55,33 @@ public class DataflowVariableTest {
 
         task(() -> dv.set("value")).join();
         assertEquals("New value is:VALUEVALUE", text);
+    }
+
+    int total;
+
+    synchronized void addToTotal(Integer amount) {
+        total += amount;
+    }
+
+    @Test
+    public void allListenValue() throws InterruptedException {
+        total = 0;
+        int number = 2000;
+        DataflowVariable<Integer> dv = new DataflowVariable<>();
+
+        for (int i = 0; i < number; i++) {
+            task(() -> {
+                try {
+                    addToTotal(dv.get());
+                } catch (Exception e) {
+                    System.out.println("Exception message: " + e.getMessage());
+                }
+            }).then(() -> {
+                addToTotal(1);
+            });
+        }
+        dv.set(3);
+        Thread.sleep(600);
+        assertEquals(number * 4, total);
     }
 }
