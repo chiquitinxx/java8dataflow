@@ -5,12 +5,11 @@ package org.grooscript.concurrency;
  */
 public class ImmutableQueue<T> {
 
-    volatile ImmutableData<T> begin = null;
-    volatile ImmutableData<T> end = null;
+    ImmutableData<T> begin = null;
+    ImmutableData<T> end = null;
 
-    public void add(T value) {
-        ImmutableData<T> newData = new ImmutableData<>(value, begin);
-        begin = newData;
+    public synchronized void add(T value) {
+        begin = new ImmutableData<>(value, begin);
         if (end == null) {
             end = begin;
         }
