@@ -2,24 +2,26 @@ package org.grooscript.concurrency;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.function.Function;
+
+import static org.grooscript.concurrency.Task.*;
 
 /**
  * Created by jorge on 14/05/14.
  */
-public class DataflowVariable<T> extends DataflowPromise<T> {
+public class DataflowVariable<T> extends DataflowPromise<T> implements FutureResult<T> {
 
     private T value = null;
     private volatile boolean hasSettedValue = false;
     private DataflowResult<T> bounded;
-    private List<DataflowChangeResult<T>> thenFunctions = new ArrayList<DataflowChangeResult<T>>();
+    private List<Runnable> thenRunnableFunctions = new ArrayList<>();
 
     protected void setValue(T value) {
-        if (hasSettedValue == false) {
-            executeBoundedIfExists(value);
-            this.value = executeThenFunctions(value);
-            done = true;
+        if (!hasSettedValue) {
             hasSettedValue = true;
+            executeBoundedIfExists(value);
+            executeThenFunctions();
+            this.value = value;
+            done = true;
         }
     }
 
@@ -48,19 +50,43 @@ public class DataflowVariable<T> extends DataflowPromise<T> {
         bounded = whenBound;
     }
 
-    DataflowVariable<T> then(DataflowChangeResult<T> thenFunction) {
-        addThenFunction(thenFunction);
+
+    public DataflowVariable<T> then(DataflowChangeResult<T> thenFunction) {
+        DataflowVariable<T> result;
+        try {
+            System.out.println("IN");
+            result = task(() -> thenFunction.then(this.get()));
+            System.out.println("END");
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            result = null;
+        }
+        return result;
+    }
+
+    public FutureResult<T> then(Runnable runnable) {
+        thenRunnableFunctions.add(runnable);
         return this;
     }
 
-    private void addThenFunction(DataflowChangeResult<T> thenFunction) {
-        thenFunctions.add(thenFunction);
+    private void executeThenFunctions() {
+        for (Runnable function: thenRunnableFunctions) {
+            function.run();
+        }
     }
 
-    private T executeThenFunctions(T value) {
-        for (DataflowChangeResult<T> function: thenFunctions) {
-            value = function.then(value);
+    @Override
+    public void onError(ErrorResult errorResult) {
+
+    }
+
+    @Override
+    public void join() {
+        try {
+            this.get();
+        } catch (Exception e) {
+            //
         }
-        return value;
     }
 }

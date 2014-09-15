@@ -1,5 +1,6 @@
 package org.grooscript.concurrency;
 
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
@@ -46,13 +47,16 @@ public class DataflowVariableTest {
     @Test
     public void testThen() {
         DataflowVariable<String> dv = new DataflowVariable<>();
-        dv.then((value) -> value.toUpperCase()).
-        then((value) -> value + value).
-        then((value) -> {
+        dv.then(value -> {
+            System.out.println("1");
+            return value.toUpperCase();
+        }).
+        then(value -> value + value).
+        then(value -> {
             text = "New value is:" + value;
             return value;
         });
-
+        System.out.println("Set...");
         task(() -> dv.set("value")).join();
         assertEquals("New value is:VALUEVALUE", text);
     }

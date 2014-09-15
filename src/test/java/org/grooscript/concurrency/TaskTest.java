@@ -30,6 +30,35 @@ public class TaskTest {
     }
 
     @Test
+    public void testTaskRunnableIsAsync()  {
+        number = 0;
+        task(() -> {
+            try {
+                Thread.sleep(100);
+                number = 1;
+            } catch (Exception e) {
+                //
+            }
+        });
+        assertEquals(0, number);
+    }
+
+    @Test
+    public void testTaskCallableIsAsync()  {
+        number = 0;
+        task(() -> {
+            try {
+                Thread.sleep(100);
+                number = 1;
+            } catch (Exception e) {
+                //
+            }
+            return 1;
+        });
+        assertEquals(0, number);
+    }
+
+    @Test
     public void testExecuteTaskWithThen()  {
         number = 0;
         task((Runnable)() -> number = 3).then(() -> {
@@ -48,7 +77,7 @@ public class TaskTest {
         }).onError((t) -> {
             number = -1;
         });
-        waitMilisecs(50);
+        waitMilisecs(100);
         assertEquals(-1, number);
     }
 
@@ -80,7 +109,7 @@ public class TaskTest {
     @Test
     public void testJoinRunnableTask() {
         number = 0;
-        TaskResult result = task(() -> {
+        FutureResult result = task(() -> {
             waitMilisecs(10);
             number = 5;
         });

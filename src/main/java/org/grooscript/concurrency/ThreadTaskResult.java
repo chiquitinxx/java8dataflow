@@ -1,11 +1,14 @@
 package org.grooscript.concurrency;
 
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 
 /**
  * Created by jorge on 09/07/14.
  */
-public class ThreadTaskResult implements TaskResult {
+public class ThreadTaskResult implements FutureResult {
 
     private Thread mainThread;
     private Throwable mainException = null;
@@ -21,8 +24,8 @@ public class ThreadTaskResult implements TaskResult {
     }
 
     @Override
-    public TaskResult then(Runnable runnable) {
-        TaskResult result;
+    public FutureResult then(Runnable runnable) {
+        FutureResult result;
         if (mainThread.isAlive()) {
             waitForEndTask();
         }
@@ -58,5 +61,30 @@ public class ThreadTaskResult implements TaskResult {
         } catch (Exception e) {
             System.out.println("Error waiting: "+e);
         }
+    }
+
+    @Override
+    public boolean cancel(boolean mayInterruptIfRunning) {
+        return result.cancel(mayInterruptIfRunning);
+    }
+
+    @Override
+    public boolean isCancelled() {
+        return result.isCancelled();
+    }
+
+    @Override
+    public boolean isDone() {
+        return result.isDone();
+    }
+
+    @Override
+    public Object get() throws InterruptedException, ExecutionException {
+        return result.get();
+    }
+
+    @Override
+    public Object get(long timeout, TimeUnit unit) throws InterruptedException, ExecutionException, TimeoutException {
+        return result.get(timeout, unit);
     }
 }

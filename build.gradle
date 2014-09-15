@@ -1,5 +1,4 @@
 apply plugin: 'java'
-apply plugin: 'groovy'
 apply plugin: 'idea'
 
 sourceCompatibility = 1.8
@@ -10,12 +9,9 @@ repositories {
 }
 
 dependencies {
-    testCompile 'org.codehaus.groovy:groovy:2.3.6'
-    testCompile('org.spockframework:spock-core:0.7-groovy-2.0') {
-        exclude module: 'groovy-all'
-    }
+    testCompile 'junit:junit-dep:4.10'
 }
 
 task wrapper(type: Wrapper) {
-    gradleVersion = '2.0'
+    gradleVersion = '2.1'
 }

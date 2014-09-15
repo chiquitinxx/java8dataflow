@@ -3,7 +3,6 @@ package org.grooscript.concurrency;
 import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.Callable;
-import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 import java.util.stream.Stream;
 
@@ -12,13 +11,14 @@ import java.util.stream.Stream;
  */
 public class Task {
 
-    static TaskResult task(Runnable runnable) {
+    static FutureResult task(Runnable runnable) {
         return new ThreadTaskResult(runnable);
     }
 
-    static <T> Future task(Callable<T> callable) {
+    static <T> DataflowVariable task(Callable<T> callable) {
         DataflowVariable<T> dataflowVariable = new DataflowVariable<>();
-        dataflowVariable.set(runCallable(callable));
+        Thread thread = new Thread(() -> dataflowVariable.set(runCallable(callable)));
+        thread.start();
         return dataflowVariable;
     }
 

@@ -1,9 +1,13 @@
 package org.grooscript.concurrency;
 
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
+
 /**
  * Created by jorge on 09/07/14.
  */
-public class ExceptionTaskResult implements TaskResult {
+public class ExceptionTaskResult implements FutureResult {
 
     private Throwable mainException;
 
@@ -12,7 +16,7 @@ public class ExceptionTaskResult implements TaskResult {
     }
 
     @Override
-    public TaskResult then(Runnable runnable) {
+    public FutureResult then(Runnable runnable) {
         return this;
     }
 
@@ -23,4 +27,29 @@ public class ExceptionTaskResult implements TaskResult {
 
     @Override
     public void join() { };
+
+    @Override
+    public boolean cancel(boolean mayInterruptIfRunning) {
+        return true;
+    }
+
+    @Override
+    public boolean isCancelled() {
+        return true;
+    }
+
+    @Override
+    public boolean isDone() {
+        return false;
+    }
+
+    @Override
+    public Object get() throws InterruptedException, ExecutionException {
+        return null;
+    }
+
+    @Override
+    public Object get(long timeout, TimeUnit unit) throws InterruptedException, ExecutionException, TimeoutException {
+        return null;
+    }
 }
