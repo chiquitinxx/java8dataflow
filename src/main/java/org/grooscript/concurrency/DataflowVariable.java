@@ -54,9 +54,7 @@ public class DataflowVariable<T> extends DataflowPromise<T> implements FutureRes
     public DataflowVariable<T> then(DataflowChangeResult<T> thenFunction) {
         DataflowVariable<T> result;
         try {
-            System.out.println("IN");
             result = task(() -> thenFunction.then(this.get()));
-            System.out.println("END");
 
         } catch (Exception e) {
             e.printStackTrace();

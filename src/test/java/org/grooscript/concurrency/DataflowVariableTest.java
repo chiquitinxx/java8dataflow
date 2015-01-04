@@ -17,6 +17,7 @@ import static org.junit.Assert.assertEquals;
 public class DataflowVariableTest {
 
     volatile String text;
+    volatile boolean done;
 
     @Test
     public void testMultipleVariables() throws InterruptedException, ExecutionException {
@@ -45,20 +46,22 @@ public class DataflowVariableTest {
     }
 
     @Test
-    public void testThen() {
+    public void testThen() throws InterruptedException {
+        done = false;
         DataflowVariable<String> dv = new DataflowVariable<>();
-        dv.then(value -> {
-            System.out.println("1");
-            return value.toUpperCase();
-        }).
-        then(value -> value + value).
-        then(value -> {
-            text = "New value is:" + value;
-            return value;
-        });
-        System.out.println("Set...");
-        task(() -> dv.set("value")).join();
-        assertEquals("New value is:VALUEVALUE", text);
+        dv.then(value -> value.toUpperCase()).
+            then(value -> value + value).
+            then(value -> {
+                text = "New value is:" + value;
+                return value;
+            }).then( value -> {
+                assertEquals("New value is:VALUEVALUE", text);
+                done = true;
+                return value;
+            });
+        dv.set("value");
+        Thread.sleep(100);
+        assertEquals(done, true);
     }
 
     int total;
@@ -68,7 +71,7 @@ public class DataflowVariableTest {
     }
 
     @Test
-    public void allListenValue() throws InterruptedException {
+    public void testAllListenValue() throws InterruptedException {
         total = 0;
         int number = 2000;
         DataflowVariable<Integer> dv = new DataflowVariable<>();

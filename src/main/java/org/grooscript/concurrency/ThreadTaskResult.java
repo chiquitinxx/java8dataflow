@@ -59,7 +59,7 @@ public class ThreadTaskResult implements FutureResult {
         try {
             result.get();
         } catch (Exception e) {
-            System.out.println("Error waiting: "+e);
+            e.printStackTrace();
         }
     }
 

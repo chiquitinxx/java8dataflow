@@ -25,7 +25,7 @@ public class TaskTest {
     public void testExecuteTask()  {
         number = 0;
         task((Runnable)() -> number = 1);
-        waitMilisecs(50);
+        //waitMilisecs(50);
         assertEquals(1, number);
     }
 
@@ -33,12 +33,8 @@ public class TaskTest {
     public void testTaskRunnableIsAsync()  {
         number = 0;
         task(() -> {
-            try {
-                Thread.sleep(100);
-                number = 1;
-            } catch (Exception e) {
-                //
-            }
+            waitMilisecs(50);
+            number = 1;
         });
         assertEquals(0, number);
     }
@@ -47,12 +43,8 @@ public class TaskTest {
     public void testTaskCallableIsAsync()  {
         number = 0;
         task(() -> {
-            try {
-                Thread.sleep(100);
-                number = 1;
-            } catch (Exception e) {
-                //
-            }
+            waitMilisecs(50);
+            number = 1;
             return 1;
         });
         assertEquals(0, number);
