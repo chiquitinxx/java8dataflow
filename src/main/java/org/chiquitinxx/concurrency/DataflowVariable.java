@@ -3,6 +3,8 @@ package org.chiquitinxx.concurrency;
 import java.util.ArrayList;
 import java.util.List;
 
+import static org.chiquitinxx.concurrency.Task.*;
+
 /**
  * Created by jorge on 14/05/14.
  */

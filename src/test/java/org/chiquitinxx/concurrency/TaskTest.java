@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.concurrent.Future;
 
 import static org.junit.Assert.*;
+import static org.chiquitinxx.concurrency.Task.*;
 
 /**
  * Created by jorge on 15/05/14.
@@ -24,7 +25,7 @@ public class TaskTest {
     public void testExecuteTask()  {
         number = 0;
         Task.task((Runnable) () -> number = 1);
-        //waitMilisecs(50);
+        waitMilisecs(10);
         assertEquals(1, number);
     }
 
@@ -131,12 +132,12 @@ public class TaskTest {
 
     @Test
     public void testReturningFromTwoTasks() {
-        Future a = task(() -> 10);
-        Future b = task(() -> 20);
+        Future<Integer> a = task(() -> 10);
+        Future<Integer> b = task(() -> 20);
         ArrayList<Integer> list = new ArrayList<>();
-        Task.whenAllBound((values -> {
-            list.add((Integer) values[0]);
-            list.add((Integer) values[1]);
+        whenAllBound((values -> {
+            list.add((Integer)values[0]);
+            list.add((Integer)values[1]);
         }), a, b);
         waitMilisecs(50);
         assertEquals(list.stream().mapToInt(p -> p).sum(), 30);
@@ -149,5 +150,4 @@ public class TaskTest {
             //nothing to do
         }
     }
-
 }

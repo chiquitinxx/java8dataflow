@@ -24,7 +24,7 @@ public class DataflowQueueTest {
         queue.set("1");
         queue.set("2");
         queue.set("3");
-        assertEquals(queue.size(), 3);
+        assertEquals(queue.getSize(), 3);
         assertEquals(queue.get(), "1");
         assertEquals(queue.get(), "2");
         assertEquals(queue.get(), "3");
@@ -43,7 +43,6 @@ public class DataflowQueueTest {
             task(() -> futures.add(queue));
         }
 
-
         for (int i = 0; i < number; i++) {
             queue.set(i);
         }
@@ -57,6 +56,7 @@ public class DataflowQueueTest {
             assertEquals(list.length, number);
             int sum = Arrays.asList(list).stream().mapToInt(e -> (Integer)e).sum();
             assertEquals(sum, 499500);
+            System.out.println("End.");
         }, futures);
     }
 }

@@ -1,44 +1,35 @@
 package org.chiquitinxx.concurrency;
 
+import java.util.Collection;
+import java.util.LinkedList;
+
 /**
  * Created by jorge on 15/05/14.
  */
 public class ImmutableQueue<T> {
 
-    ImmutableData<T> begin = null;
-    ImmutableData<T> end = null;
+    private LinkedList<T> linkedList = new LinkedList<>();
 
-    public synchronized void add(T value) {
-        begin = new ImmutableData<>(value, begin);
-        if (end == null) {
-            end = begin;
-        }
+    public synchronized ImmutableQueue<T> add(T value) {
+        ImmutableQueue<T> result = new ImmutableQueue<T>();
+        linkedList.add(value);
+        result.addItems(linkedList);
+        return result;
     }
 
     public synchronized T remove() {
-        if (!isEmpty()) {
-            T last = end.getValue();
-            if (begin == end) {
-                begin = null;
-                end = null;
-            } else {
-                end = findNextIsEnd(begin, end);
-            }
-            return last;
-        } else {
-            return null;
-        }
+        return linkedList.removeFirst();
     }
 
     public boolean isEmpty() {
-        return begin == null;
+        return linkedList.size() < 1;
     }
 
-    private ImmutableData<T> findNextIsEnd(ImmutableData<T> begin, ImmutableData<T> end) {
-        ImmutableData<T> actual = begin;
-        while (actual.getNext() != end) {
-            actual = actual.getNext();
-        }
-        return actual;
+    public int getSize() {
+        return linkedList.size();
+    }
+
+    protected void addItems(Collection items) {
+        linkedList.addAll(items);
     }
 }

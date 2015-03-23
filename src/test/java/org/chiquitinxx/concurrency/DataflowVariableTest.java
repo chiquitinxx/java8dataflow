@@ -59,20 +59,19 @@ public class DataflowVariableTest {
                 return value;
             });
         dv.set("value");
-        Thread.sleep(100);
+        Thread.sleep(20);
         assertEquals(done, true);
     }
 
-    int total;
-
-    synchronized void addToTotal(Integer amount) {
+    volatile int total;
+    void addToTotal(Integer amount) {
         total += amount;
     }
 
     @Test
     public void testAllListenValue() throws InterruptedException {
         total = 0;
-        int number = 2000;
+        int number = 100;
         DataflowVariable<Integer> dv = new DataflowVariable<>();
 
         for (int i = 0; i < number; i++) {
@@ -82,12 +81,10 @@ public class DataflowVariableTest {
                 } catch (Exception e) {
                     System.out.println("Exception message: " + e.getMessage());
                 }
-            }).then(() -> {
-                addToTotal(1);
-            });
+            }).then(() -> addToTotal(1));
         }
         dv.set(3);
-        Thread.sleep(600);
+        Thread.sleep(200);
         assertEquals(number * 4, total);
     }
 }

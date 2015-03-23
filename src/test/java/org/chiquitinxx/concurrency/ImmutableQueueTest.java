@@ -27,7 +27,6 @@ public class ImmutableQueueTest {
         assertEquals(queue.remove(), "b");
         assertEquals(queue.remove(), "c");
         assertEquals(queue.isEmpty(), true);
-        assertEquals(queue.remove(), null);
     }
 
     @Test

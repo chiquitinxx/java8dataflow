@@ -8,7 +8,7 @@ public class DataflowQueue<T> extends DataflowPromise<T> {
     private ImmutableQueue<T> queue = new ImmutableQueue<>();
 
     protected void setValue(T value) {
-        queue.add(value);
+        queue = queue.add(value);
     }
 
     boolean notHasValue() {
@@ -20,17 +20,7 @@ public class DataflowQueue<T> extends DataflowPromise<T> {
         return result;
     }
 
-    public int size() {
-        if (queue.isEmpty()) {
-            return 0;
-        } else {
-            int number = 1;
-            ImmutableData<T> actual = queue.begin;
-            while (actual.getNext() != null) {
-                number ++;
-                actual = actual.getNext();
-            }
-            return number;
-        }
+    public int getSize() {
+        return queue.getSize();
     }
 }

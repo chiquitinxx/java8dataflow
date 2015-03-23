@@ -15,18 +15,18 @@ public class Task {
         return new ThreadTaskResult(runnable);
     }
 
-    static <T> DataflowVariable task(Callable<T> callable) {
+    static <T> DataflowVariable<T> task(Callable<T> callable) {
         DataflowVariable<T> dataflowVariable = new DataflowVariable<>();
         Thread thread = new Thread(() -> dataflowVariable.set(runCallable(callable)));
         thread.start();
         return dataflowVariable;
     }
 
-    static void whenAllBound(AllBoundedFunction whenAllBounded, List<Future> futures) {
+    static <T> void whenAllBound(AllBoundedFunction<T> whenAllBounded, List<Future> futures) {
         whenAllBoundExecution(whenAllBounded, futures.stream().parallel());
     }
 
-    static void whenAllBound(AllBoundedFunction whenAllBounded, Future... futures) {
+    static <T> void whenAllBound(AllBoundedFunction<T> whenAllBounded, Future... futures) {
         whenAllBoundExecution(whenAllBounded, Arrays.stream(futures).parallel());
     }
 
