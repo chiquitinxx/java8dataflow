@@ -1,4 +1,4 @@
-package org.grooscript.concurrency;
+package org.chiquitinxx.concurrency;
 
 import org.junit.Ignore;
 import org.junit.Test;
@@ -10,7 +10,6 @@ import java.util.List;
 import java.util.concurrent.Future;
 
 import static org.junit.Assert.*;
-import static org.grooscript.concurrency.Task.*;
 
 /**
  * Created by jorge on 15/05/14.
@@ -24,7 +23,7 @@ public class TaskTest {
     @Test
     public void testExecuteTask()  {
         number = 0;
-        task((Runnable)() -> number = 1);
+        Task.task((Runnable) () -> number = 1);
         //waitMilisecs(50);
         assertEquals(1, number);
     }
@@ -53,7 +52,7 @@ public class TaskTest {
     @Test
     public void testExecuteTaskWithThen()  {
         number = 0;
-        task((Runnable)() -> number = 3).then(() -> {
+        Task.task((Runnable) () -> number = 3).then(() -> {
             number = number + 5;
         }).then(() -> number = number + 4);
         waitMilisecs(50);
@@ -135,9 +134,9 @@ public class TaskTest {
         Future a = task(() -> 10);
         Future b = task(() -> 20);
         ArrayList<Integer> list = new ArrayList<>();
-        whenAllBound((values -> {
-            list.add((Integer)values[0]);
-            list.add((Integer)values[1]);
+        Task.whenAllBound((values -> {
+            list.add((Integer) values[0]);
+            list.add((Integer) values[1]);
         }), a, b);
         waitMilisecs(50);
         assertEquals(list.stream().mapToInt(p -> p).sum(), 30);

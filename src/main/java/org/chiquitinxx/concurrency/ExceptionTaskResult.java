@@ -1,4 +1,4 @@
-package org.grooscript.concurrency;
+package org.chiquitinxx.concurrency;
 
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;

@@ -1,4 +1,4 @@
-package org.grooscript.concurrency;
+package org.chiquitinxx.concurrency;
 
 /**
  * Created by jorge on 15/05/14.

@@ -1,9 +1,7 @@
-package org.grooscript.concurrency;
+package org.chiquitinxx.concurrency;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import static org.grooscript.concurrency.Task.*;
 
 /**
  * Created by jorge on 14/05/14.

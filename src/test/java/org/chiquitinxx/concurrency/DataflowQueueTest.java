@@ -1,4 +1,4 @@
-package org.grooscript.concurrency;
+package org.chiquitinxx.concurrency;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -8,8 +8,8 @@ import java.util.*;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 
-import static org.grooscript.concurrency.Task.task;
-import static org.grooscript.concurrency.Task.whenAllBound;
+import static org.chiquitinxx.concurrency.Task.task;
+import static org.chiquitinxx.concurrency.Task.whenAllBound;
 import static org.junit.Assert.assertEquals;
 
 /**

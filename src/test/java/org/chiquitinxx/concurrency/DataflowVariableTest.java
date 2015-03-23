@@ -1,13 +1,12 @@
-package org.grooscript.concurrency;
+package org.chiquitinxx.concurrency;
 
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
 import java.util.concurrent.ExecutionException;
 
-import static org.grooscript.concurrency.Task.task;
+import static org.chiquitinxx.concurrency.Task.task;
 import static org.junit.Assert.assertEquals;
 
 /**
