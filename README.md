@@ -1,5 +1,8 @@
-Experiments with Java 8
+My experiments with Java 8
 ---------------------
+
+Dataflows
+---
 
 Trying to use Dataflows with Java 8 and Lambdas as Groovy does with amazing [GPars](http://gpars.codehaus.org/)
 
