@@ -25,7 +25,7 @@ public class TaskTest {
     public void testExecuteTask()  {
         number = 0;
         Task.task((Runnable) () -> number = 1);
-        waitMilisecs(10);
+        waitMilis(10);
         assertEquals(1, number);
     }
 
@@ -33,7 +33,7 @@ public class TaskTest {
     public void testTaskRunnableIsAsync()  {
         number = 0;
         task(() -> {
-            waitMilisecs(50);
+            waitMilis(50);
             number = 1;
         });
         assertEquals(0, number);
@@ -43,7 +43,7 @@ public class TaskTest {
     public void testTaskCallableIsAsync()  {
         number = 0;
         task(() -> {
-            waitMilisecs(50);
+            waitMilis(50);
             number = 1;
             return 1;
         });
@@ -56,7 +56,7 @@ public class TaskTest {
         Task.task((Runnable) () -> number = 3).then(() -> {
             number = number + 5;
         }).then(() -> number = number + 4);
-        waitMilisecs(50);
+        waitMilis(50);
         assertEquals(12, number);
     }
 
@@ -69,7 +69,7 @@ public class TaskTest {
         }).onError((t) -> {
             number = -1;
         });
-        waitMilisecs(100);
+        waitMilis(100);
         assertEquals(-1, number);
     }
 
@@ -77,7 +77,7 @@ public class TaskTest {
     @Test
     public void testExecuteTaskThatReturnsFuture() throws Exception {
         Future result = task(() -> {
-            waitMilisecs(10);
+            waitMilis(10);
             return 5;
         });
         assertEquals(5, result.get());
@@ -93,23 +93,35 @@ public class TaskTest {
             hello.set("Hello");
             return "World";
         });
-        whenAllBound((values -> info = values[0] + " - " + values[1]), hello, world);
-        waitMilisecs(50);
+        whenAllBound((values -> info = values.get(0) + " - " + values.get(1)), hello, world);
+        waitMilis(50);
         assertEquals("Hello - World", info);
+    }
+
+    @Test
+    public void testWhenAllBoundIsAsync() {
+        info = "";
+        DataflowVariable<String> hello = new DataflowVariable<>();
+        Future world = task(() -> {
+            waitMilis(20);
+            hello.set("Hello");
+        });
+        whenAllBound((values -> info = values.get(0) + " - " + values.get(1)), hello, world);
+        assertTrue(hello.notHasValue());
     }
 
     @Test
     public void testJoinRunnableTask() {
         number = 0;
         FutureResult result = task(() -> {
-            waitMilisecs(10);
+            waitMilis(10);
             number = 5;
         });
         result.join();
         assertEquals(5, number);
     }
 
-    @Ignore("Launching from Gradle deadlock shows, not executing from idea.")
+    @Ignore("Deadlock")
     public void testDeadLock() throws Exception {
         DataflowVariable<Integer> a = new DataflowVariable<>();
         DataflowVariable<Integer> b = new DataflowVariable<>();
@@ -136,14 +148,14 @@ public class TaskTest {
         Future<Integer> b = task(() -> 20);
         ArrayList<Integer> list = new ArrayList<>();
         whenAllBound((values -> {
-            list.add((Integer)values[0]);
-            list.add((Integer)values[1]);
+            list.add(values.get(0));
+            list.add(values.get(1));
         }), a, b);
-        waitMilisecs(50);
+        waitMilis(50);
         assertEquals(list.stream().mapToInt(p -> p).sum(), 30);
     }
 
-    private void waitMilisecs(long milis) {
+    private void waitMilis(long milis) {
         try {
             Thread.sleep(milis);
         } catch (InterruptedException ie) {

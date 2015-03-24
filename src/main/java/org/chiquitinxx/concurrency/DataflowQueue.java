@@ -1,26 +1,27 @@
 package org.chiquitinxx.concurrency;
 
+import java.util.LinkedList;
+
 /**
  * Created by jorge on 14/05/14.
  */
 public class DataflowQueue<T> extends DataflowPromise<T> {
 
-    private ImmutableQueue<T> queue = new ImmutableQueue<>();
+    private LinkedList<T> linkedList = new LinkedList<>();
 
-    protected void setValue(T value) {
-        queue = queue.add(value);
+    protected synchronized void setValue(T value) {
+        linkedList.add(value);
     }
 
     boolean notHasValue() {
-        return queue.isEmpty();
+        return linkedList.isEmpty();
     }
 
-    protected T getValue() {
-        T result = queue.remove();
-        return result;
+    protected synchronized T getValue() {
+        return linkedList.removeFirst();
     }
 
     public int getSize() {
-        return queue.getSize();
+        return linkedList.size();
     }
 }

@@ -33,13 +33,11 @@ public class DataflowQueueTest {
     @Test
     public void testStress() throws ExecutionException, InterruptedException {
         int number = 1000;
-        Date date = new Date();
         DataflowQueue<Integer> queue = new DataflowQueue<>();
 
 
-        List<Future> futures = new ArrayList<>();
+        List<Future<Integer>> futures = new ArrayList<>();
         for (int i = 0; i < number / 2; i++) {
-            //futures.add(queue);
             task(() -> futures.add(queue));
         }
 
@@ -51,12 +49,14 @@ public class DataflowQueueTest {
             futures.add(task(() -> queue.get()));
         }
 
-        whenAllBound((list) -> {
-            System.out.println("Time: "+(new Date().getTime() - date.getTime()));
-            assertEquals(list.length, number);
-            int sum = Arrays.asList(list).stream().mapToInt(e -> (Integer)e).sum();
-            assertEquals(sum, 499500);
-            System.out.println("End.");
+        DataflowVariable<Integer> result = new DataflowVariable<>();
+
+        whenAllBound(values -> {
+            //System.out.println("All bounded, calculating...");
+            assertEquals(values.size(), number);
+            int sum = values.stream().mapToInt(i -> i).sum();
+            result.set(sum);
         }, futures);
+        assertEquals(result.get().intValue(), 499500);
     }
 }

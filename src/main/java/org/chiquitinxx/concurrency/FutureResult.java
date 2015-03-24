@@ -7,7 +7,7 @@ import java.util.concurrent.Future;
  * Date: 15/09/14
  */
 public interface FutureResult<V> extends Future<V> {
-    public FutureResult<V> then(Runnable runnable);
-    public void onError(ErrorResult errorResult);
-    public void join();
+    FutureResult<V> then(Runnable runnable);
+    void onError(ErrorResult errorResult);
+    void join();
 }
