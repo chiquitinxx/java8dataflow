@@ -39,7 +39,7 @@ public abstract class DataflowPromise<T> implements Future<T> {
      * @throws InterruptedException  if the current thread was interrupted
      *                               while waiting
      */
-    public T get() throws InterruptedException, ExecutionException {
+    public synchronized T get() throws InterruptedException, ExecutionException {
         if (notHasValue() && !interrupt && !isCancelled()) {
             waitBounded();
         }
@@ -52,7 +52,8 @@ public abstract class DataflowPromise<T> implements Future<T> {
     private synchronized void waitBounded()
     {
         try {
-            wait();
+            if (!done)
+                wait();
         } catch (InterruptedException ie) {
             interrupt = true;
         }

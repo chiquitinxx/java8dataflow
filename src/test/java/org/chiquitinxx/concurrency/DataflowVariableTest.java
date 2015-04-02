@@ -20,6 +20,12 @@ public class DataflowVariableTest {
 
     @Test
     public void testMultipleVariables() throws InterruptedException, ExecutionException {
+        for (int i = 0; i < 1000; i++) {
+            assertEquals(calc(), 200);
+        }
+    }
+
+    private int calc() throws InterruptedException, ExecutionException {
         DataflowVariable<Integer> initialDistance = new DataflowVariable<>();
         DataflowVariable<Integer> acceleration = new DataflowVariable<>();
         DataflowVariable<Integer> time = new DataflowVariable<>();
@@ -29,8 +35,9 @@ public class DataflowVariableTest {
             time.set(10);
         });
 
-        int result = initialDistance.get() + acceleration.get() / 2 * (time.get() * time.get());
-        assertEquals(result, 200);
+        int timeByTime = time.get() * time.get();
+        int result = initialDistance.get() + acceleration.get() / 2 * timeByTime;
+        return result;
     }
 
     @Test
@@ -84,7 +91,7 @@ public class DataflowVariableTest {
             }).then(() -> addToTotal(1));
         }
         dv.set(3);
-        Thread.sleep(200);
+        Thread.sleep(300);
         assertEquals(number * 4, total);
     }
 }

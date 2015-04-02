@@ -11,6 +11,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import static org.junit.Assert.*;
+import static org.hamcrest.core.IsNot.not;
 
 /**
  * Created by jorgefrancoleza on 25/3/15.
@@ -28,7 +29,7 @@ public class ExperimentsTest {
         assertEquals(values, originalList);
         assertEquals(experiments.mergeSort(values), sortedList);
         Collections.shuffle(values);
-        assertNotEquals(values, sortedList);
+        assertThat(values, not(sortedList));
         assertEquals(experiments.mergeSort(values), sortedList);
     }
 
