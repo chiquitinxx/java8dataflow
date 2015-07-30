@@ -1,5 +1,3 @@
 java8.ipr
 java8.iws
-java8dataflow.iml
-java8dataflow.ipr
-java8dataflow.iws
+java8*.i*

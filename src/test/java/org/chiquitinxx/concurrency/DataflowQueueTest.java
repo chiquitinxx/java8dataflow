@@ -32,9 +32,8 @@ public class DataflowQueueTest {
 
     @Test
     public void testStress() throws ExecutionException, InterruptedException {
-        int number = 1000;
+        int number = 10000;
         DataflowQueue<Integer> queue = new DataflowQueue<>();
-
 
         List<Future<Integer>> futures = new ArrayList<>();
         for (int i = 0; i < number / 2; i++) {
@@ -57,6 +56,6 @@ public class DataflowQueueTest {
             int sum = values.stream().mapToInt(i -> i).sum();
             result.set(sum);
         }, futures);
-        assertEquals(result.get().intValue(), 499500);
+        assertEquals(result.get().intValue(), 49995000);
     }
 }
