@@ -7,7 +7,7 @@ import java.util.function.Supplier;
  */
 public class LazyValue<T> implements Value<T> {
 
-    private Supplier<T> supplier;
+    private final Supplier<T> supplier;
 
     public LazyValue(Supplier<T> supplier) {
         this.supplier = supplier;

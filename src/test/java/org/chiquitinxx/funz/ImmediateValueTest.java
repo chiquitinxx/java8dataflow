@@ -13,17 +13,17 @@ public class ImmediateValueTest {
 
     @Test
     public void testReturnValues() {
-        Value<String> value = new ImmediateValue<>(() -> "hello!");
+        Value<String> value = new ImmediateValue<>("hello!");
         assertEquals(value.get(), "hello!");
 
-        Value<Integer> intValue = new ImmediateValue<>(() -> 4);
+        Value<Integer> intValue = new ImmediateValue<>(4);
         assertEquals(intValue.get(), new Integer(4));
     }
 
     @Test
     public void testSupplierRunsOnlyOneTime() {
         String chars = "ch";
-        Value<String> value = new ImmediateValue<>(() -> chars + chars);
+        Value<String> value = new ImmediateValue<>(chars + chars);
         String result = value.get();
         assertEquals(result, "chch");
         assertFalse(result == "chch");
