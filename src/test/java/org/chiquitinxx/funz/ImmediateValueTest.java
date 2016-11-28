@@ -30,4 +30,15 @@ public class ImmediateValueTest {
         assertTrue(result == value.get());
         assertTrue(result == value.get());
     }
+
+    @Test
+    public void testNullableImmediateValue() {
+        Value value = new ImmediateValue<String>(null);
+        try {
+            value.get();
+            fail("SupplierReturnsNullException must be thrown");
+        } catch (SupplierReturnsNullException e) {
+            //
+        }
+    }
 }

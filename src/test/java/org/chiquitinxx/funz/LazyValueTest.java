@@ -27,4 +27,15 @@ public class LazyValueTest {
         assertFalse(result == "chch");
         assertFalse(result == value.get());
     }
+
+    @Test
+    public void testSupplierReturnsNull() {
+        Value<String> value = new LazyValue<>(() -> null);
+        try {
+            value.get();
+            fail("SupplierReturnsNullException must be thrown");
+        } catch (SupplierReturnsNullException e) {
+            //
+        }
+    }
 }

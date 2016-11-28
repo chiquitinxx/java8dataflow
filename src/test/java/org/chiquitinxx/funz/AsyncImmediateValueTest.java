@@ -68,4 +68,21 @@ public class AsyncImmediateValueTest {
         byte[] errorSerialized = SerializationUtils.serialize(error);
         assertEquals(error, SerializationUtils.deserialize(errorSerialized));
     }
+
+    @Test
+    public void testSuplierCantReturnNull() {
+        AsyncImmediateValue<Integer> error = new AsyncImmediateValue<>(() -> null);
+        try {
+            error.get();
+            fail("Empty Result Exception must be thrown");
+        } catch (SupplierReturnsNullException e) {
+            //
+        }
+        try {
+            error.orElse(5);
+            fail("Empty Result Exception must be thrown");
+        } catch (SupplierReturnsNullException e) {
+            //
+        }
+    }
 }

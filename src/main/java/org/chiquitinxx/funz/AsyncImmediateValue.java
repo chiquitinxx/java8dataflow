@@ -16,6 +16,10 @@ public class AsyncImmediateValue<T> implements MaybeValue<T>, Serializable {
     private T value = null;
     private Throwable error = null;
 
+    /**
+     * Supplier cant return null
+     * @param supplier
+     */
     public AsyncImmediateValue(Supplier<T> supplier) {
         future = CompletableFuture.supplyAsync(supplier);
     }
@@ -63,8 +67,11 @@ public class AsyncImmediateValue<T> implements MaybeValue<T>, Serializable {
 
     private synchronized T getValue(T failValue) {
         try {
-            if (value == null && error == null) {
+            if (error == null && value == null) {
                 value = future.get();
+                if (value == null) {
+                    throw new SupplierReturnsNullException();
+                }
             }
             return value == null ? failValue : value;
         } catch (ExecutionException e) {
