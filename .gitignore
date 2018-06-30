@@ -1,3 +1,5 @@
-java8.ipr
-java8.iws
-java8*.i*
+*.iml
+.idea
+build
+target
+.gradle

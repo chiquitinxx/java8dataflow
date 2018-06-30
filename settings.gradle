@@ -1,2 +1,6 @@
-rootProject.name = 'java8experiments'
+include 'frp'
+include 'yum'
+include 'acme'
+include 'chiquitinxx'
 
+rootProject.name = 'java8experiments'
