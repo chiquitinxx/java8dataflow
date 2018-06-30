@@ -1,7 +1,27 @@
 My experiments with Java 8
 ---------------------
 
-Dataflows
+This is a gradle multi-project with following projects:
+
+yum
+---
+
+A small http server using java 8 stuff
+
+
+acme
+---
+
+A small javafx application to experiment separation of logic, application, domain, ...
+
+
+frp
+---
+
+Some experiments with functional reactive programming
+
+
+chiquitinxx
 ---
 
 Trying to use Dataflows with Java 8 and Lambdas as Groovy does with amazing [GPars](http://gpars.codehaus.org/)
@@ -32,4 +52,4 @@ Example whenAllBound and task:
     Thread.sleep(50);
     assertEquals("Hello - World", info);
 
-Just for fun, welcome your ideas, suggestions, ...
+Just for fun, welcome your ideas, suggestions, fixes ...
