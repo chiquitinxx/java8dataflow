@@ -4,6 +4,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Function;
+import java.util.function.Supplier;
 
 /**
  * JFL 16/11/18
@@ -48,19 +49,15 @@ public class Result<T> {
         return errors != null && errors.contains(error);
     }
 
-    Result<?> then(Result<?> result) {
-        if (this.isOk()) {
-            return result;
-        } else {
-            return this;
-        }
+    <U> Result<U> then(Supplier<Result<U>> supplier) {
+        return this.then(value -> supplier.get());
     }
 
-    Result<?> then(Function<T, Result<?>> function) {
+    <U> Result<U> then(Function<T, Result<U>> function) {
         if (this.isOk()) {
             return function.apply(this.result);
         } else {
-            return this;
+            return (Result<U>)this;
         }
     }
 }

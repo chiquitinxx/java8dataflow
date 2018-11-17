@@ -1,36 +1,37 @@
 package yila.experiments.winter;
 
+import java.util.function.Function;
+import java.util.function.Supplier;
+
 import static yila.experiments.winter.RepositoryFactory.onPersonRepository;
+import static yila.experiments.winter.StringValidation.trimLengthAtLeast;
+import static yila.experiments.winter.Result.ok;
+import static yila.experiments.winter.Result.validate;
 
 /**
  * JFL 17/11/18
  */
 public class CreatePersonUseCase {
 
-    public static Result createPerson(String name, int age) {
+    public static Result<Person> createPerson(String name, int age) {
         return validateName(name)
                 .then(validateAge(age))
                 .then(buildPerson(name, age))
-                .then(person -> savePerson((Person)person));
+                .then(savePerson);
     }
 
     private static Result<Validation> validateName(String name) {
-        return Result.validate(validateNameContent(name), Error.INVALID_PERSON_NAME);
+        return validate(trimLengthAtLeast(name, 2), Error.INVALID_PERSON_NAME);
     }
 
-    private static boolean validateNameContent(String name) {
-        return name != null && !name.trim().equals("") && name.trim().length() > 1;
+    private static Supplier<Result<Validation>> validateAge(int age) {
+        return () -> validate(age >= 0 && age < 150, Error.INVALID_PERSON_AGE);
     }
 
-    private static Result<Validation> validateAge(int age) {
-        return Result.validate(age >= 0 && age < 150, Error.INVALID_PERSON_AGE);
+    private static Supplier<Result<Person>> buildPerson(String name, int age) {
+        return () -> ok(new Person(name, age));
     }
 
-    private static Result<Person> buildPerson(String name, int age) {
-        return Result.ok(new Person(name, age));
-    }
-
-    private static Result<Person> savePerson(Person person) {
-        return (Result<Person>)onPersonRepository(repository -> Result.ok(repository.save(person)));
-    }
+    private static Function<Person, Result<Person>> savePerson =
+        person -> onPersonRepository(repository -> ok(repository.save(person)));
 }
