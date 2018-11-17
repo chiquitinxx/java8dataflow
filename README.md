@@ -20,6 +20,11 @@ frp
 
 Some experiments with functional reactive programming
 
+winter
+------
+
+Static functions to handle domain logic
+
 
 chiquitinxx
 ---

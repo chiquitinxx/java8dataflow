@@ -2,5 +2,6 @@ include 'frp'
 include 'yum'
 include 'acme'
 include 'chiquitinxx'
+include 'winter'
 
 rootProject.name = 'java8experiments'
