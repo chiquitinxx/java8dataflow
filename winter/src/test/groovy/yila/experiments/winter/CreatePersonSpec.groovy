@@ -26,7 +26,7 @@ class CreatePersonSpec extends Specification {
         Result result = CreatePersonUseCase.createPerson(name, 42)
 
         then:
-        result.hasError(Error.INVALID_PERSON_NAME)
+        result.error.get() == Error.INVALID_PERSON_NAME
 
         where:
         name << [null, '', '    ', 'b', '  c']
@@ -38,7 +38,7 @@ class CreatePersonSpec extends Specification {
         Result result = CreatePersonUseCase.createPerson('Jorge', age)
 
         then:
-        result.hasError(Error.INVALID_PERSON_AGE)
+        result.error.get() == Error.INVALID_PERSON_AGE
 
         where:
         age << [-1, 150]
@@ -56,7 +56,7 @@ class CreatePersonSpec extends Specification {
         Result result = CreatePersonUseCase.createPerson(name, age)
 
         then:
-        result.hasError(Error.ERROR_PERSON_REPOSITORY)
+        result.error.get() == Error.ERROR_PERSON_REPOSITORY
     }
 
     void setup() {

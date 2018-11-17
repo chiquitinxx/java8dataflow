@@ -5,5 +5,5 @@ package org.chiquitinxx.concurrency;
  */
 @FunctionalInterface
 public interface ErrorResult {
-    public void onException(Throwable throwable);
+    void onException(Throwable throwable);
 }

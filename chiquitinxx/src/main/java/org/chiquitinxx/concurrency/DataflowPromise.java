@@ -12,8 +12,8 @@ import java.util.concurrent.TimeoutException;
 public abstract class DataflowPromise<T> implements Future<T> {
 
     volatile boolean done = false;
-    volatile boolean cancelled = false;
-    volatile boolean interrupt = false;
+    private volatile boolean cancelled = false;
+    private volatile boolean interrupt = false;
 
     abstract boolean notHasValue();
     protected abstract T getValue();

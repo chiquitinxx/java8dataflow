@@ -5,5 +5,5 @@ package org.chiquitinxx.concurrency;
  */
 @FunctionalInterface
 public interface DataflowResult<T> {
-    public void whenBound(T result);
+    void whenBound(T result);
 }

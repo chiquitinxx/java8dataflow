@@ -1,7 +1,5 @@
 package yila.experiments.winter;
 
-import java.util.Collections;
-import java.util.List;
 import java.util.Optional;
 import java.util.function.Function;
 import java.util.function.Supplier;
@@ -16,44 +14,38 @@ public class Result<T> {
     }
 
     public static Result error(Error error) {
-        return new Result<>(null, Collections.singletonList(error));
-    }
-
-    public static Result errors(List<Error> errors) {
-        return new Result<>(null, errors);
+        return new Result<>(null, error);
     }
 
     public static Result<Validation> validate(boolean success, Error error) {
         return success ? ok(Validation.OK): error(error);
     }
-
-    private final boolean ok;
+    
     private final T result;
-    private final List<Error> errors;
+    private final Error error;
 
-    private Result(T result, List<Error> errors) {
+    private Result(T result, Error error) {
         this.result = result;
-        this.ok = result != null;
-        this.errors = errors;
+        this.error = error;
     }
 
     boolean isOk() {
-        return ok;
+        return result != null;
     }
 
     Optional<T> getValue() {
         return Optional.ofNullable(result);
     }
 
-    boolean hasError(Error error) {
-        return errors != null && errors.contains(error);
+    Optional<Error> getError() {
+        return Optional.ofNullable(this.error);
     }
 
-    <U> Result<U> then(Supplier<Result<U>> supplier) {
-        return this.then(value -> supplier.get());
+    <U> Result<U> ifOk(Supplier<Result<U>> supplier) {
+        return this.ifOk(value -> supplier.get());
     }
 
-    <U> Result<U> then(Function<T, Result<U>> function) {
+    <U> Result<U> ifOk(Function<T, Result<U>> function) {
         if (this.isOk()) {
             return function.apply(this.result);
         } else {

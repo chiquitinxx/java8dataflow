@@ -5,5 +5,5 @@ package org.chiquitinxx.concurrency;
  */
 @FunctionalInterface
 public interface DataflowChangeResult<T> {
-    public T then(T result);
+    T then(T result);
 }

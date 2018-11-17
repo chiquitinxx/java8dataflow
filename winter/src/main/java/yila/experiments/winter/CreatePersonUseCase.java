@@ -15,9 +15,9 @@ public class CreatePersonUseCase {
 
     public static Result<Person> createPerson(String name, int age) {
         return validateName(name)
-                .then(validateAge(age))
-                .then(buildPerson(name, age))
-                .then(savePerson);
+                .ifOk(validateAge(age))
+                .ifOk(buildPerson(name, age))
+                .ifOk(savePerson);
     }
 
     private static Result<Validation> validateName(String name) {
