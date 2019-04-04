@@ -1,4 +1,6 @@
-package yila.experiments.winter;
+package yila.experiments.winter.visible;
+
+import yila.experiments.winter.Validation;
 
 import java.util.Optional;
 import java.util.function.Function;
@@ -29,23 +31,23 @@ public class Result<T> {
         this.error = error;
     }
 
-    boolean isOk() {
+    public boolean isOk() {
         return result != null;
     }
 
-    Optional<T> getValue() {
+    public Optional<T> getValue() {
         return Optional.ofNullable(result);
     }
 
-    Optional<Error> getError() {
+    public Optional<Error> getError() {
         return Optional.ofNullable(this.error);
     }
 
-    <U> Result<U> ifOk(Supplier<Result<U>> supplier) {
+    public <U> Result<U> ifOk(Supplier<Result<U>> supplier) {
         return this.ifOk(value -> supplier.get());
     }
 
-    <U> Result<U> ifOk(Function<T, Result<U>> function) {
+    public <U> Result<U> ifOk(Function<T, Result<U>> function) {
         if (this.isOk()) {
             return function.apply(this.result);
         } else {

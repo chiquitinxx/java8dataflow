@@ -1,9 +1,14 @@
-package yila.experiments.winter;
+package yila.experiments.winter.visible;
+
+import yila.experiments.winter.annotation.Data;
 
 /**
  * JFL 16/11/18
  */
+@Data
 public class Person {
+
+    //?????????? id ?????????????????
 
     private final String name;
     private final int age;

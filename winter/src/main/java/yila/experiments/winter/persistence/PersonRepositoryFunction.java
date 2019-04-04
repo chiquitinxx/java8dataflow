@@ -1,4 +1,4 @@
-package yila.experiments.winter;
+package yila.experiments.winter.persistence;
 
 /**
  * JFL 17/11/18

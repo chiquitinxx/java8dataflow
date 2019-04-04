@@ -1,4 +1,6 @@
-package yila.experiments.winter;
+package yila.experiments.winter.persistence;
+
+import yila.experiments.winter.visible.Person;
 
 /**
  * JFL 17/11/18
